@@ -1,0 +1,28 @@
+#!/bin/bash
+# Firas Aboushamalah
+# 250 920 750
+# This script takes any number of arguments as valid integers by command line and outputs their average.
+echo
+
+total=0
+avg=0
+number_of_args=$#
+
+# if the total arguments is greater than 0, enter loop
+if [ $# -gt 0 ]; then
+
+        #iterate through the arguments 
+        for var in $*
+        do
+          	total=`expr $total + $var`
+        done
+
+	echo "scale=2; $total / $number_of_args" | bc
+else
+    	echo "Need at least one argument!"
+        exit 1
+
+fi
+echo
+
+

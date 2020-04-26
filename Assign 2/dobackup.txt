@@ -1,0 +1,38 @@
+#log in bash server
+#!/bin/bash
+
+#Firas Aboushamalah
+#250920750
+#Assignment 2 Part 4: This script takes standard input for a directory and creates the backup of it by calling scp.
+
+#taking standard input for directory name
+echo -n 'Input a directory name: "
+read direc #reading the input and putting it in a variable "direc"
+
+
+#if the directory exists
+if [ -d $direc ]; then
+
+        #If the directory backup exists
+        if [ -d 'backup' ]; then
+                #remove it
+                rm -r backup
+        fi #end if statement
+
+        #copy the directory to current direc and name it "backup"
+        cp -r $direc backup
+        #making an archive of backup directory named "backup.tar"
+        tar -cf "backup.tar" $direc
+        #renaming backup.tar file so its in correct format
+        my backup.tar backup`date +-%d-%m-%Y`.tar
+        #calling scp to send copy of tar file to home directory as "mybackups"
+        scp -r fabousha@cs2211b.gaul.csd.uwo.ca:~/backup`date +-%d-%m-%Y`.tar $USER$cs2211b.gaul.csd.uwo.ca:~/mybackups
+
+#if directory doesn't exist
+else
+    	#print error saying it doesn't exist and give exit 1 error
+        echo "ERROR: Directory does not exist"
+        exit 1
+
+#ending first if statement
+fi

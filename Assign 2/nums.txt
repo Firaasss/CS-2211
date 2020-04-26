@@ -1,0 +1,47 @@
+#log into bash server
+#!/bin/bash
+
+#Firas Aboushamalah
+#250 920 750
+#Part 6: This script takes input for a filename and determines if its valid output or not, 
+#if it is it will ooutput the letter palindrones, or specific letters, or numbers according to the number given in nums.
+
+arg=$1 #variable 
+fileName=$2
+
+if [ $# = 0 ]; then # if we received no arguments
+        echo "Usage: nums option filename"
+        exit 1
+elif [ $# = 1 ]; then # if we only received the option arg
+        echo "Error: no filename given"
+        exit 1
+elif [ ! -f $fileName ]; then # if the file passed doesn't even exist
+        echo "$fileName does not exist!"
+        exit 1
+else # if no errors
+        case $arg in # cases
+                0) # only wants us to output the number of lines
+                        cat $fileName | wc -l ;;
+                                # cat the file then pipe it to wc
+                1) # uppercase and replace all numswith *
+                        cat $fileName | tr "[a-z]" "[A-Z]" | tr -s "[0-9]" "*" ;;
+                                # cat the file then uppercase every word and replace numbers with *
+                2) # 7 letter palindromes
+                        while read line; do # run through the lines
+                                for word in $line; do # run through the words
+                                temp=${word,,} # lowercase in order to easily check
+                                if [[ $(rev <<< $temp) == $temp ]]; then # if the rev = the normal
+                                        if [ ${#line} -eq 7 ]; then # if the line is 7 letters
+                                                echo $word # print the word
+                                        fi
+                                fi
+                                done
+                        done <$fileName ;; # finish
+                3) # print out 4 largest numbers
+                        grep -Eo [0-9]\{\1,} $fileName | sort -rn | head -4 ;;
+                        # grep and find all numbers, sort by dec, choose the 4 top ones
+                *) # anything other than 0,1,2,3
+                        echo "Invalid option!"
+                        exit 1;;
+        esac
+fi
